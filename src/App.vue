@@ -1,29 +1,50 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div class="overlay">
+      <Navbar/>
+      <router-view/>
     </div>
-    <router-view/>
   </div>
 </template>
 
+<script>
+import Navbar from "@/components/Navbar";
+
+export default {
+  name: "App",
+  components: {
+    Navbar
+  }
+};
+</script>
+
 <style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+* {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
 }
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  min-width: 320px;
+  overflow-x: hidden;
+}
+
+#app {
+  height: 100vh;
+  background-image: url("./assets/bg-home.jpeg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  & .overlay {
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
   }
 }
 </style>
