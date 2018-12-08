@@ -1,3 +1,26 @@
+@mixin button {
+
+  .field__btn,
+  .btn {
+    background-color: orange;
+    padding: 8px 16px;
+    border-radius: 4px;
+    box-shadow: 0 0 2px 1px #000;
+    color: #fff;
+    text-shadow: 0 0 4px #000;
+    cursor: pointer;
+
+    &:hover {
+      background-color: darken(orange, 10%);
+    }
+
+    @media (min-width: 1200px) {
+      font-size: 17px;
+      text-shadow: 0 0 8px #000;
+    }
+  }
+}
+
 @mixin form {
 
   .signup__form,
@@ -91,18 +114,6 @@
       }
     }
 
-    .field__btn {
-      background-color: orange;
-      padding: 8px 16px;
-      border-radius: 4px;
-      box-shadow: 0 0 2px 1px #000;
-      color: #fff;
-      text-shadow: 0 0 4px #000;
-
-      @media (min-width: 1200px) {
-        font-size: 17px;
-        text-shadow: 0 0 8px #000;
-      }
-    }
+    @include button;
   }
 }

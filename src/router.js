@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Signup from '@/components/Signup'
 import Login from '@/components/Login'
+import WeightliftingWorkouts from '@/components/WeightliftingWorkouts'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/weightlifting-workouts',
+      name: 'WeightliftingWorkouts',
+      component: WeightliftingWorkouts
     },
     {
       path: '/about',

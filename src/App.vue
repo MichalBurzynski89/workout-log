@@ -36,13 +36,14 @@ body {
 }
 
 #app {
-  height: 100vh;
-  background-image: url("./assets/bg-home.jpeg");
+  min-height: 100vh;
+  background-image: url("./assets/images/bg-home.jpeg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 
   & .overlay {
+    min-height: 100vh;
     height: 100%;
     background: rgba(0, 0, 0, 0.1);
   }
