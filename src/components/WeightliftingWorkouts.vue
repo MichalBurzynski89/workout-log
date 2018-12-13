@@ -1,7 +1,7 @@
 <template>
   <div class="weightlifting-workouts">
     <h2 class="heading">Weight Lifting Workouts</h2>
-    <router-link class="btn" to>Add Workout</router-link>
+    <router-link class="btn" :to="{ name: 'AddWLWorkout' }">Add Workout</router-link>
   </div>
 </template>
 

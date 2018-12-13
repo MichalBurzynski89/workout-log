@@ -4,10 +4,12 @@ import Home from './views/Home.vue'
 import Signup from '@/components/Signup'
 import Login from '@/components/Login'
 import WeightliftingWorkouts from '@/components/WeightliftingWorkouts'
+import AddWLWorkout from '@/components/AddWLWorkout'
 
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -28,6 +30,11 @@ export default new Router({
       path: '/weightlifting-workouts',
       name: 'WeightliftingWorkouts',
       component: WeightliftingWorkouts
+    },
+    {
+      path: '/weightlifting-workouts/add-workout',
+      name: 'AddWLWorkout',
+      component: AddWLWorkout
     },
     {
       path: '/about',
