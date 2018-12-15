@@ -2,7 +2,7 @@
   <div class="add-workout">
     <form @submit.prevent="addWorkout" class="add-workout__form">
       <h2 class="add-workout__title">Add New Weight Lifting Workout</h2>
-      <ul v-if="exercises" class="exercises">
+      <ul v-if="exercises.length" class="exercises">
         <li v-for="(exercise, index) in exercises" class="exercise" :key="index">
           <span class="exercise__name">{{ exercise.name }}</span>
           <ol class="exercise__sets">
@@ -32,7 +32,13 @@
         :key="index"
       >
         <label for="set">Set {{ set }} (reps x weight in kg):</label>
-        <input @input="addSet" type="text" name="set" class="field__input">
+        <input
+          @input="addSet"
+          type="text"
+          name="set"
+          placeholder="e.g. 10 x 60"
+          class="field__input"
+        >
       </div>
       <div class="field">
         <button type="submit" class="field__btn">Add Workout</button>
@@ -42,6 +48,8 @@
 </template>
 
 <script>
+const regex = /^[1-9]\d{0,1}\sx\s[1-9]\d{0,2}$/i;
+
 export default {
   name: "AddWLWorkout",
   data() {
@@ -52,40 +60,65 @@ export default {
       setsCounter: 1
     };
   },
+  watch: {
+    name(value) {
+      if (!value) this.reset();
+    },
+    computedNumberOfSets(newNumber) {
+      while (this.sets.length > newNumber) this.sets.pop();
+    }
+  },
   methods: {
     addWorkout() {
       console.log(this.exercises);
     },
     addExercise() {
       if (this.name && this.sets.length) {
-        const exercise = {
-          name: this.name,
-          sets: this.sets
-        };
-        this.exercises.push(exercise);
-        this.name = null;
-        this.sets = [];
-        this.setsCounter = 1;
-        const inputFields = [
-          ...document.querySelectorAll(".field[data-id] .field__input")
-        ];
-        inputFields.forEach(inputField => (inputField.value = ""));
+        if (
+          this.sets.indexOf(null) === -1 &&
+          this.sets.length === this.computedNumberOfSets
+        ) {
+          const exercise = {
+            name: this.name,
+            sets: this.sets
+          };
+          this.exercises.push(exercise);
+          this.name = null;
+          this.reset();
+        } else {
+          alert("Please fill in all fields in the correct format!");
+        }
+      } else {
+        alert(
+          "To add an exercise, you must enter its name and at least one set of it in the appropriate format"
+        );
       }
     },
     addSet(e) {
-      if (e.target.value) {
+      if (regex.test(e.target.value)) {
         this.sets[e.target.parentNode.dataset.id] = e.target.value;
+      } else {
+        this.sets[e.target.parentNode.dataset.id] = null;
       }
     },
     deleteExercise(name) {
       this.exercises = this.exercises.filter(
         exercise => exercise.name !== name
       );
+    },
+    reset() {
+      this.sets = [];
+      this.setsCounter = 1;
+      const inputFields = [
+        ...document.querySelectorAll(".field[data-id] .field__input")
+      ];
+      inputFields.forEach(inputField => (inputField.value = ""));
     }
   },
   computed: {
     computedNumberOfSets() {
       if (this.setsCounter) return parseInt(this.setsCounter);
+      return 0;
     }
   }
 };
