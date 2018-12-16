@@ -5,11 +5,17 @@
         <router-link :to="{ name: 'home' }" class="title__link">Workout Log</router-link>
       </h1>
       <ul class="menu">
-        <li class="menu__item">
+        <li v-if="!user" class="menu__item">
           <router-link :to="{ name: 'Signup' }" class="menu__link">Signup</router-link>
         </li>
-        <li class="menu__item">
+        <li v-if="!user" class="menu__item">
           <router-link :to="{ name: 'Login' }" class="menu__link">Login</router-link>
+        </li>
+        <li v-if="user" class="menu__item">
+          <a class="menu__link">{{ user.email }}</a>
+        </li>
+        <li v-if="user" class="menu__item">
+          <a @click.prevent="logout" href class="menu__link">Logout</a>
         </li>
       </ul>
     </nav>
@@ -17,8 +23,35 @@
 </template>
 
 <script>
+import firebase from "firebase/app";
+import "firebase/auth";
+
 export default {
-  name: "Navbar"
+  name: "Navbar",
+  data() {
+    return {
+      user: null
+    };
+  },
+  created() {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.user = user;
+      } else {
+        this.user = null;
+      }
+    });
+  },
+  methods: {
+    logout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.$router.push({ name: "Login" });
+        });
+    }
+  }
 };
 </script>
 
