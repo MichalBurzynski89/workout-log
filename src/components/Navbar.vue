@@ -79,6 +79,10 @@ export default {
     margin-bottom: 8px;
     text-shadow: 0 0 8px orange;
 
+    &:hover {
+      text-shadow: 1px 1px 12px orange;
+    }
+
     @media (min-width: 1024px) {
       font-size: 64px;
     }
@@ -102,14 +106,14 @@ export default {
     }
 
     .menu__item {
-      margin: 0 16px;
+      margin: 0 10px;
 
       .menu__link {
         display: block;
         text-decoration: none;
         color: #fff;
         text-shadow: 1px 1px 8px #000;
-        font-size: 18px;
+        font-size: 16px;
 
         @media (min-width: 1024px) {
           font-size: 24px;

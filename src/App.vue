@@ -42,6 +42,10 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
 
+  &.bg-swimming {
+    background-image: url("./assets/images/bg-swimming.jpeg");
+  }
+
   & .overlay {
     min-height: 100vh;
     height: 100%;

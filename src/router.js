@@ -5,6 +5,8 @@ import Signup from '@/components/Signup'
 import Login from '@/components/Login'
 import WeightliftingWorkouts from '@/components/WeightliftingWorkouts'
 import AddWLWorkout from '@/components/AddWLWorkout'
+import SwimmingWorkouts from '@/components/SwimmingWorkouts'
+import AddSwimmingWorkout from '@/components/AddSwimmingWorkout'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
@@ -49,6 +51,22 @@ const router = new Router({
       path: '/weightlifting-workouts/add-workout',
       name: 'AddWLWorkout',
       component: AddWLWorkout,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/swimming-workouts',
+      name: 'SwimmingWorkouts',
+      component: SwimmingWorkouts,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/swimming-workouts/add-workout',
+      name: 'AddSwimmingWorkout',
+      component: AddSwimmingWorkout,
       meta: {
         requiresAuth: true
       }

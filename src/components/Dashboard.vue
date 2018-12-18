@@ -8,7 +8,9 @@
     </div>
     <div class="section">
       <h2 class="section__title">Swimming</h2>
-      <img class="section__img" src="../assets/images/swimming-640x425.jpeg" alt="Swimming">
+      <router-link :to="{ name: 'SwimmingWorkouts' }">
+        <img class="section__img" src="../assets/images/swimming-640x425.jpeg" alt="Swimming">
+      </router-link>
     </div>
   </div>
 </template>
