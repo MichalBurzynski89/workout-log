@@ -71,7 +71,13 @@ export default {
               .then(cred => {
                 ref.set({
                   user_id: cred.user.uid,
-                  nickname: this.nickname
+                  nickname: this.nickname,
+                  weightliftingWorkouts: null,
+                  swimmingWorkouts: null,
+                  totalAmountOfWorkouts: {
+                    weightlifting: 0,
+                    swimming: 0
+                  }
                 });
               })
               .then(() => {

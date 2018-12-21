@@ -21,7 +21,7 @@
         <i @click="addExercise" class="fas fa-plus-circle field__icon-add" title="Add exercise"></i>
       </div>
       <div v-if="name" class="field">
-        <label for="sets">Sets:</label>
+        <label for="sets">Sets (between 1 and 5):</label>
         <input type="number" min="1" name="sets" class="field__input" v-model="setsCounter">
       </div>
       <div
@@ -48,6 +48,10 @@
 </template>
 
 <script>
+import db from "@/firebase/fbConfig";
+import firebase from "firebase/app";
+import "firebase/auth";
+
 const regex = /^[1-9]\d{0,1}\sx\s[1-9]\d{0,2}$/i;
 
 export default {
@@ -65,12 +69,38 @@ export default {
       if (!value) this.reset();
     },
     computedNumberOfSets(newNumber) {
+      if (newNumber > 5) this.setsCounter = 5;
       while (this.sets.length > newNumber) this.sets.pop();
     }
   },
   methods: {
     addWorkout() {
-      console.log(this.exercises);
+      if (this.exercises.length) {
+        db.collection("users")
+          .where("user_id", "==", firebase.auth().currentUser.uid)
+          .get()
+          .then(snapshot => {
+            snapshot.forEach(doc => {
+              const update = {};
+              const workoutIndex =
+                doc.data().totalAmountOfWorkouts.weightlifting + 1;
+              update[
+                `weightliftingWorkouts.workout${workoutIndex}`
+              ] = this.exercises;
+              update[
+                `weightliftingWorkouts.workout${workoutIndex}_timestamp`
+              ] = Date.now();
+              update["totalAmountOfWorkouts.weightlifting"] = workoutIndex;
+              db.collection("users")
+                .doc(doc.id)
+                .update(update);
+            });
+          })
+          .then(() => this.$router.push({ name: "WeightliftingWorkouts" }))
+          .catch(err => alert(err));
+      } else {
+        alert("To add a workout, you must enter at least one exercise");
+      }
     },
     addExercise() {
       if (this.name && this.sets.length) {
@@ -117,7 +147,8 @@ export default {
   },
   computed: {
     computedNumberOfSets() {
-      if (this.setsCounter) return parseInt(this.setsCounter);
+      if (this.setsCounter && this.setsCounter[0] !== "-")
+        return parseInt(this.setsCounter);
       return 0;
     }
   }

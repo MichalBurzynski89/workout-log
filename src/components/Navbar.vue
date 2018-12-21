@@ -108,6 +108,10 @@ export default {
     .menu__item {
       margin: 0 10px;
 
+      @media (min-width: 640px) {
+        margin: 0 16px;
+      }
+
       .menu__link {
         display: block;
         text-decoration: none;
