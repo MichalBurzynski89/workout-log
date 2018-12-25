@@ -7,7 +7,7 @@
         <thead>
           <tr>
             <th colspan="7">
-              Workout {{ index + 1 }}
+              Workout {{ workouts.length - index }}
               <span>{{ timestamps[index] }}</span>
             </th>
           </tr>
@@ -49,15 +49,15 @@ export default {
       .then(snapshot => {
         snapshot.forEach(doc => {
           for (
-            let i = 1;
-            i <= doc.data().totalAmountOfWorkouts.weightlifting;
-            i++
+            let i = doc.data().totalAmountOfWorkouts.weightlifting;
+            i >= 1;
+            i--
           ) {
             this.workouts.push(doc.data().weightliftingWorkouts[`workout${i}`]);
             this.timestamps.push(
               moment(
                 doc.data().weightliftingWorkouts[`workout${i}_timestamp`]
-              ).format("LLLL")
+              ).format("llll")
             );
           }
         });
@@ -73,92 +73,6 @@ export default {
 .weightlifting-workouts {
   @include button;
   @include stylesForWorkoutsComponents;
-
-  .container {
-    font-size: 12px;
-    margin: 64px 4px 16px;
-    text-align: center;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    @media (min-width: 1024px) {
-      margin-top: 80px;
-      font-size: 16px;
-    }
-
-    @media (min-width: 1600px) {
-      margin-top: 100px;
-    }
-
-    table {
-      border-collapse: collapse;
-      background: rgba(255, 165, 0, 0.6);
-      white-space: nowrap;
-      box-shadow: 0 0 4px #fff;
-      text-shadow: 0 0 4px orange;
-      margin-left: 8px;
-      margin-right: 8px;
-
-      @media (min-width: 1024px) {
-        margin-left: 12px;
-        margin-right: 12px;
-      }
-
-      @media (min-width: 1600px) {
-        margin-left: 20px;
-        margin-right: 20px;
-      }
-
-      &:not(:last-of-type) {
-        margin-bottom: 16px;
-      }
-
-      th,
-      td {
-        border: 1px solid rgba(0, 0, 0, 0.6);
-        padding: 4px;
-
-        @media (min-width: 1024px) {
-          padding: 8px;
-        }
-
-        &:nth-child(even) {
-          background: rgba(255, 165, 0, 0.9);
-        }
-      }
-
-      thead tr:first-child th {
-        padding: 12px 4px;
-        font-size: 16px;
-
-        @media (min-width: 1024px) {
-          padding: 20px 8px;
-          font-size: 24px;
-        }
-
-        span {
-          font-size: 14px;
-          font-weight: normal;
-
-          @media (min-width: 1024px) {
-            font-size: 18px;
-          }
-        }
-      }
-
-      thead tr:last-child {
-        th:first-of-type {
-          font-weight: normal;
-        }
-      }
-
-      tbody tr {
-        th {
-          background: rgba(255, 165, 0, 0.3);
-        }
-      }
-    }
-  }
+  @include table;
 }
 </style>
