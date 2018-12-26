@@ -48,11 +48,19 @@ const router = new Router({
       }
     },
     {
-      path: '/weightlifting-workouts/add-workout',
+      path: '/weightlifting-workouts/:action_type',
       name: 'AddWLWorkout',
       component: AddWLWorkout,
+      props: true,
       meta: {
         requiresAuth: true
+      },
+      beforeEnter: (to, from, next) => {
+        if (to.params.action_type !== 'add-workout' && !to.params.workout) {
+          next({ name: 'WeightliftingWorkouts' });
+        } else {
+          next();
+        }
       }
     },
     {

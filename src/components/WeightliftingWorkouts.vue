@@ -1,7 +1,10 @@
 <template>
   <div class="weightlifting-workouts">
     <h2 class="heading">Weight Lifting Workouts</h2>
-    <router-link class="btn" :to="{ name: 'AddWLWorkout' }">Add Workout</router-link>
+    <router-link
+      class="btn"
+      :to="{ name: 'AddWLWorkout', params: { action_type: 'add-workout' } }"
+    >Add Workout</router-link>
     <div v-if="workouts.length" class="container">
       <table v-for="(workout, index) in workouts" :key="index">
         <thead>
@@ -9,6 +12,12 @@
             <th colspan="7">
               Workout {{ workouts.length - index }}
               <span>{{ timestamps[index] }}</span>
+              <router-link
+                class="icon-edit"
+                :to="{ name: 'AddWLWorkout', params: { action_type: `edit-workout-${workouts.length - index}`, workout: workout } }"
+              >
+                <i class="fas fa-pen" title="Edit workout"></i>
+              </router-link>
             </th>
           </tr>
           <tr>

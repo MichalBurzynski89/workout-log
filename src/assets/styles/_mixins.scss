@@ -248,6 +248,16 @@
             font-size: 18px;
           }
         }
+
+        .icon-edit {
+          position: relative;
+          left: 16px;
+          color: rgba(0, 0, 0, 0.5);
+
+          @media (min-width: 1024px) {
+            left: 24px;
+          }
+        }
       }
 
       thead tr:last-child {

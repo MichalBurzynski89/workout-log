@@ -1,7 +1,9 @@
 <template>
   <div class="add-workout">
     <form @submit.prevent="addWorkout" class="add-workout__form">
-      <h2 class="add-workout__title">Add New Weight Lifting Workout</h2>
+      <h2
+        class="add-workout__title"
+      >{{ this.workout ? `Edit Weight Lifting Workout #${this.$route.params.action_type[this.$route.params.action_type.length - 1]}` : "Add New Weight Lifting Workout" }}</h2>
       <ul v-if="exercises.length" class="exercises">
         <li v-for="(exercise, index) in exercises" class="exercise" :key="index">
           <span class="exercise__name">{{ exercise.name }}</span>
@@ -17,7 +19,13 @@
       </ul>
       <div class="field">
         <label for="exercise">Exercise:</label>
-        <input type="text" name="exercise" class="field__input" v-model="name">
+        <input
+          type="text"
+          name="exercise"
+          placeholder="up to 14 characters"
+          class="field__input"
+          v-model="name"
+        >
         <i @click="addExercise" class="fas fa-plus-circle field__icon-add" title="Add exercise"></i>
       </div>
       <div v-if="name" class="field">
@@ -41,7 +49,7 @@
         >
       </div>
       <div class="field">
-        <button type="submit" class="field__btn">Add Workout</button>
+        <button type="submit" class="field__btn">{{ this.workout ? "Done" : "Add Workout" }}</button>
       </div>
     </form>
   </div>
@@ -56,9 +64,12 @@ const regex = /^[1-9]\d{0,1}\sx\s[1-9]\d{0,2}$/i;
 
 export default {
   name: "AddWLWorkout",
+  props: {
+    workout: Array
+  },
   data() {
     return {
-      exercises: [],
+      exercises: this.workout ? this.workout : [],
       name: null,
       sets: [],
       setsCounter: 1
@@ -82,15 +93,20 @@ export default {
           .then(snapshot => {
             snapshot.forEach(doc => {
               const update = {};
-              const workoutIndex =
-                doc.data().totalAmountOfWorkouts.weightlifting + 1;
+              const workoutIndex = this.workout
+                ? this.$route.params.action_type[
+                    this.$route.params.action_type.length - 1
+                  ]
+                : doc.data().totalAmountOfWorkouts.weightlifting + 1;
               update[
                 `weightliftingWorkouts.workout${workoutIndex}`
               ] = this.exercises;
-              update[
-                `weightliftingWorkouts.workout${workoutIndex}_timestamp`
-              ] = Date.now();
-              update["totalAmountOfWorkouts.weightlifting"] = workoutIndex;
+              if (!this.workout) {
+                update[
+                  `weightliftingWorkouts.workout${workoutIndex}_timestamp`
+                ] = Date.now();
+                update["totalAmountOfWorkouts.weightlifting"] = workoutIndex;
+              }
               db.collection("users")
                 .doc(doc.id)
                 .update(update);
@@ -99,11 +115,11 @@ export default {
           .then(() => this.$router.push({ name: "WeightliftingWorkouts" }))
           .catch(err => alert(err));
       } else {
-        alert("To add a workout, you must enter at least one exercise");
+        alert("To add or edit a workout, you must enter at least one exercise");
       }
     },
     addExercise() {
-      if (this.name && this.sets.length) {
+      if (this.name && this.name.length < 15 && this.sets.length) {
         if (
           this.sets.indexOf(null) === -1 &&
           this.sets.length === this.computedNumberOfSets
@@ -120,7 +136,7 @@ export default {
         }
       } else {
         alert(
-          "To add an exercise, you must enter its name and at least one set of it in the appropriate format"
+          "To add an exercise, you must enter its name (the name cannot be longer than 14 characters including whitespace characters) and at least one set of it in the appropriate format"
         );
       }
     },
