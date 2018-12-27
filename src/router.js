@@ -72,11 +72,19 @@ const router = new Router({
       }
     },
     {
-      path: '/swimming-workouts/add-workout',
+      path: '/swimming-workouts/:action_type',
       name: 'AddSwimmingWorkout',
       component: AddSwimmingWorkout,
+      props: true,
       meta: {
         requiresAuth: true
+      },
+      beforeEnter: (to, from, next) => {
+        if (to.params.action_type !== 'add-workout' && !to.params.workout) {
+          next({ name: 'SwimmingWorkouts' });
+        } else {
+          next();
+        }
       }
     },
     {

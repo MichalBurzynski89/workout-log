@@ -1,7 +1,10 @@
 <template>
   <div class="swimming-workouts">
     <h2 class="heading">Swimming Workouts</h2>
-    <router-link class="btn" :to="{ name: 'AddSwimmingWorkout' }">Add Workout</router-link>
+    <router-link
+      class="btn"
+      :to="{ name: 'AddSwimmingWorkout', params: { action_type: 'add-workout' } }"
+    >Add Workout</router-link>
     <div v-if="workouts" class="container">
       <table v-for="(workout, index) in workouts" :key="index">
         <thead>
@@ -9,6 +12,12 @@
             <th colspan="2">
               Workout {{ workouts.length - index }}
               <span>{{ workout.timestamp }}</span>
+              <router-link
+                class="icon-edit"
+                :to="{ name: 'AddSwimmingWorkout', params: { action_type: `edit-workout-${workouts.length - index}`, workout: workout } }"
+              >
+                <i class="fas fa-pen" title="Edit workout"></i>
+              </router-link>
             </th>
           </tr>
           <tr>
@@ -101,5 +110,15 @@ export default {
   @include button;
   @include stylesForWorkoutsComponents;
   @include table;
+
+  .container {
+    table {
+      thead tr:first-child th {
+        .icon-edit {
+          left: 4px;
+        }
+      }
+    }
+  }
 }
 </style>

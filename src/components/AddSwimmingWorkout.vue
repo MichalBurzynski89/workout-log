@@ -1,7 +1,9 @@
 <template>
   <div class="add-workout">
     <form @submit.prevent="addWorkout" class="add-workout__form">
-      <h2 class="add-workout__title">Add New Swimming Workout</h2>
+      <h2
+        class="add-workout__title"
+      >{{ this.workout ? `Edit Swimming Workout #${this.$route.params.action_type.slice(this.$route.params.action_type.search(/\d/))}` : "Add New Swimming Workout"}}</h2>
       <div class="field">
         <label for="time">Overall time (in minutes):</label>
         <input type="number" min="0" name="time" class="field__input" v-model="time">
@@ -33,7 +35,7 @@
         <input type="number" min="0" name="freestyle" class="field__input" v-model="freestyle">
       </div>
       <div class="field">
-        <button type="submit" class="field__btn">Add Workout</button>
+        <button type="submit" class="field__btn">{{ this.workout ? "Done" : "Add Workout" }}</button>
       </div>
     </form>
   </div>
@@ -46,14 +48,17 @@ import "firebase/auth";
 
 export default {
   name: "AddSwimmingWorkout",
+  props: {
+    workout: Object
+  },
   data() {
     return {
-      time: "",
-      laps: "",
-      butterfly: "",
-      backstroke: "",
-      breaststroke: "",
-      freestyle: ""
+      time: this.workout ? this.workout.time : "",
+      laps: this.workout ? this.workout.laps : "",
+      butterfly: this.workout ? this.workout.butterfly : "",
+      backstroke: this.workout ? this.workout.backstroke : "",
+      breaststroke: this.workout ? this.workout.breaststroke : "",
+      freestyle: this.workout ? this.workout.freestyle : ""
     };
   },
   mounted() {
@@ -82,22 +87,37 @@ export default {
             backstroke: this.computedBackstroke,
             breaststroke: this.computedBreaststroke,
             freestyle: this.computedFreestyle,
-            timestamp: Date.now()
+            timestamp: this.workout ? null : Date.now()
           };
           db.collection("users")
             .where("user_id", "==", firebase.auth().currentUser.uid)
             .get()
             .then(snapshot => {
               snapshot.forEach(doc => {
-                db.collection("users")
-                  .doc(doc.id)
-                  .update({
-                    swimmingWorkouts: firebase.firestore.FieldValue.arrayUnion(
-                      workout
-                    ),
-                    "totalAmountOfWorkouts.swimming":
-                      doc.data().totalAmountOfWorkouts.swimming + 1
-                  });
+                if (this.workout) {
+                  const swimmingWorkouts = doc.data().swimmingWorkouts;
+                  const workoutIndex =
+                    parseInt(
+                      this.$route.params.action_type.slice(
+                        this.$route.params.action_type.search(/\d/)
+                      )
+                    ) - 1;
+                  workout.timestamp = swimmingWorkouts[workoutIndex].timestamp;
+                  swimmingWorkouts[workoutIndex] = workout;
+                  db.collection("users")
+                    .doc(doc.id)
+                    .update({ swimmingWorkouts: swimmingWorkouts });
+                } else {
+                  db.collection("users")
+                    .doc(doc.id)
+                    .update({
+                      swimmingWorkouts: firebase.firestore.FieldValue.arrayUnion(
+                        workout
+                      ),
+                      "totalAmountOfWorkouts.swimming":
+                        doc.data().totalAmountOfWorkouts.swimming + 1
+                    });
+                }
               });
             })
             .then(() => this.$router.push({ name: "SwimmingWorkouts" }))
@@ -114,27 +134,33 @@ export default {
   },
   computed: {
     computedTime() {
+      if (typeof this.time === "number") return this.time;
       if (/[1-9]/.test(this.time[0])) return parseInt(this.time);
       return 0;
     },
     computedLaps() {
+      if (typeof this.laps === "number") return this.laps;
       if (/[1-9]/.test(this.laps[0])) return parseInt(this.laps);
       return 0;
     },
     computedButterfly() {
+      if (typeof this.butterfly === "number") return this.butterfly;
       if (/[1-9]/.test(this.butterfly[0])) return parseInt(this.butterfly);
       return 0;
     },
     computedBackstroke() {
+      if (typeof this.backstroke === "number") return this.backstroke;
       if (/[1-9]/.test(this.backstroke[0])) return parseInt(this.backstroke);
       return 0;
     },
     computedBreaststroke() {
+      if (typeof this.breaststroke === "number") return this.breaststroke;
       if (/[1-9]/.test(this.breaststroke[0]))
         return parseInt(this.breaststroke);
       return 0;
     },
     computedFreestyle() {
+      if (typeof this.freestyle === "number") return this.freestyle;
       if (/[1-9]/.test(this.freestyle[0])) return parseInt(this.freestyle);
       return 0;
     }

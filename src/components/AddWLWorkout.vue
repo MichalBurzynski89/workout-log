@@ -3,7 +3,7 @@
     <form @submit.prevent="addWorkout" class="add-workout__form">
       <h2
         class="add-workout__title"
-      >{{ this.workout ? `Edit Weight Lifting Workout #${this.$route.params.action_type[this.$route.params.action_type.length - 1]}` : "Add New Weight Lifting Workout" }}</h2>
+      >{{ this.workout ? `Edit Weight Lifting Workout #${this.$route.params.action_type.slice(this.$route.params.action_type.search(/\d/))}` : "Add New Weight Lifting Workout" }}</h2>
       <ul v-if="exercises.length" class="exercises">
         <li v-for="(exercise, index) in exercises" class="exercise" :key="index">
           <span class="exercise__name">{{ exercise.name }}</span>
@@ -94,9 +94,9 @@ export default {
             snapshot.forEach(doc => {
               const update = {};
               const workoutIndex = this.workout
-                ? this.$route.params.action_type[
-                    this.$route.params.action_type.length - 1
-                  ]
+                ? this.$route.params.action_type.slice(
+                    this.$route.params.action_type.search(/\d/)
+                  )
                 : doc.data().totalAmountOfWorkouts.weightlifting + 1;
               update[
                 `weightliftingWorkouts.workout${workoutIndex}`
