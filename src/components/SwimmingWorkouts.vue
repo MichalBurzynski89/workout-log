@@ -84,10 +84,12 @@ export default {
         });
       })
       .then(() => {
-        this.workouts.forEach(workout => {
-          workout.timestamp = moment(workout.timestamp).format("llll");
-        });
-        this.workouts.reverse();
+        if (this.workouts) {
+          this.workouts.forEach(workout => {
+            workout.timestamp = moment(workout.timestamp).format("llll");
+          });
+          this.workouts.reverse();
+        }
       })
       .catch(err => alert(err));
   },
